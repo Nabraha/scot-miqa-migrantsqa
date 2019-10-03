@@ -20,12 +20,18 @@ const QuestionCard = props => {
               {props.editQuestion && props.editQuestion.id === question.id ? (
                 <Form>
                   <TextArea
+                    data-testid="edit"
                     value={props.editContentQuestion}
                     style={{ minHeight: 100 }}
                     onChange={e => props.onChange(e)}
                   />
                   <div className="ui two buttons">
-                    <Button onClick={props.handleSaveClick} basic color="green">
+                    <Button
+                      data-testid="saveBtn"
+                      onClick={props.handleSaveClick}
+                      basic
+                      color="green"
+                    >
                       Save
                     </Button>
                     <Button
@@ -39,8 +45,9 @@ const QuestionCard = props => {
                   </div>
                 </Form>
               ) : (
-                question.content
+                <div data-testid="conte">{question.content}</div>
               )}
+
               {props.userId === question.user_id && !props.editQuestion ? (
                 <Card.Content extra>
                   <div className="ui two buttons">
@@ -66,6 +73,7 @@ const QuestionCard = props => {
             </Accordion.Title>
 
             <AnswersList
+              data-testid="co"
               answers={props.answers}
               question={question}
               activeIndex={props.activeIndex}
