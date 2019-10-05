@@ -34,13 +34,11 @@ describe("QuestionCard Component", () => {
     );
     const { getByTestId } = component;
     const textArea = getByTestId("edit");
-    //console.log(textArea);
     expect(textArea.value).toBe("edited question");
   });
 
   it("should save edited question on Save", () => {
     const handleSaveClick = jest.fn();
-    const onChange = jest.fn();
     const component = render(
       <QuestionCard
         question={{
@@ -78,6 +76,7 @@ it("should handle onChange question value ", () => {
         id: 1
       }}
       answers={[]}
+      editContentQuestion="1"
       handleSaveClick={() => {}}
       onChange={onChange}
     />
