@@ -4,6 +4,7 @@ import { Message } from "semantic-ui-react";
 import { updatePassword } from "../api/updatePassword";
 import { Redirect } from "react-router-dom";
 import { Form, Grid, Header, Segment, Button } from "semantic-ui-react";
+import { getUsersDataByUserId } from "../api/users";
 
 class ProfilePage extends Component {
   constructor(props) {
@@ -18,9 +19,9 @@ class ProfilePage extends Component {
       confirmedPassword: ""
     };
   }
-  componentDidMount() {
-    fetch(`/api/users/${this.props.userId}`)
-      .then(res => res.json())
+
+  getUserData = () => {
+    getUsersDataByUserId(this.props.userId)
       .then(data => {
         this.setState({
           user: data
@@ -29,6 +30,9 @@ class ProfilePage extends Component {
       .catch(error => {
         console.log("error is ", error);
       });
+  };
+  componentDidMount() {
+    this.getUserData();
   }
 
   validateForm() {
@@ -89,7 +93,7 @@ class ProfilePage extends Component {
         <Grid centered columns={3}>
           <Grid.Column>
             <Header as="h2" textAlign="center" color="brown">
-              Account Profile <i class="earlybirds icon" />
+              Change Password <i class="earlybirds icon" />
             </Header>
             <Segment>
               {userData ? (

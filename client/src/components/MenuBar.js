@@ -60,13 +60,6 @@ export default class MenuBar extends Component {
           as={Link}
           to="/about"
         />
-        <Menu.Item
-          name="status"
-          active={activeItem === "status"}
-          onClick={this.handleItemClick}
-          as={Link}
-          to="/status"
-        />
 
         {this.props.userId ? (
           <Menu.Menu position="right">

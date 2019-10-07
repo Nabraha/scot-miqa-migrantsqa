@@ -1,14 +1,33 @@
 import React from "react";
-import { Button, Card, Form, TextArea, Accordion } from "semantic-ui-react";
+import {
+  Button,
+  Card,
+  Form,
+  TextArea,
+  Accordion,
+  Icon,
+  Popup,
+  Image
+} from "semantic-ui-react";
 import { formatingDate } from "../util/formatingDate";
 import AnswersList from "./AnswersList";
 import QuestionUpvote from "./QuestionUpvote";
+import { Link } from "react-router-dom";
 
 const QuestionCard = props => {
   const { question, index } = props;
   return (
     <Card data-testid="question" fluid key={question.id}>
       <Card.Content>
+        <Popup
+          content="Expand"
+          trigger={
+            <Image floated="right" as={Link} to={`/question/${question.id}`}>
+              {" "}
+              <Icon name="expand" />
+            </Image>
+          }
+        />
         <Card.Header>
           <Accordion>
             <Accordion.Title
