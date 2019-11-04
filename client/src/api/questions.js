@@ -1,5 +1,5 @@
-export const getQuestions = () => {
-  return fetch("/api/questions").then(res => res.json());
+export const getQuestions = (sortBy = "date_posted") => {
+  return fetch(`/api/questions/?KeyWord=${sortBy}`).then(res => res.json());
 };
 
 export const getUsers = () => {

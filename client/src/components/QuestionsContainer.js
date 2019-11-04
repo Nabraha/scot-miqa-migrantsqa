@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Container, Loader } from "semantic-ui-react";
+import { Container, Loader, Divider } from "semantic-ui-react";
 import QuestionsList from "./QuestionsList";
 import AddQuestion from "./AddQuestion";
 import { getQuestions } from "../api/questions";
 import { getAnswers } from "../api/answers";
+import PropTypes from "prop-types";
 
 export default class QuestionsContainer extends Component {
   constructor(props) {
@@ -20,6 +21,11 @@ export default class QuestionsContainer extends Component {
   componentDidMount() {
     this.pageReload();
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.sortBy !== prevProps.sortBy) {
+      this.pageReload();
+    }
+  }
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -29,7 +35,7 @@ export default class QuestionsContainer extends Component {
   };
 
   pageReload = () => {
-    getQuestions().then(res => {
+    getQuestions(this.props.sortBy).then(res => {
       this.setState({
         questions: res,
         tags: this.props.tags,
@@ -37,7 +43,9 @@ export default class QuestionsContainer extends Component {
       });
     });
     getAnswers().then(res => {
-      this.setState({ answers: res });
+      this.setState({
+        answers: res
+      });
     });
   };
 
@@ -63,7 +71,13 @@ export default class QuestionsContainer extends Component {
       <Loader />
     ) : (
       <Container>
-        <AddQuestion pageReload={this.pageReload} />
+        <AddQuestion
+          getFilteredTags={this.props.getFilteredTags}
+          sortType={this.props.sortType}
+          pageReload={this.pageReload}
+          userId={this.props.userId}
+        />
+        <Divider />
         <QuestionsList
           pageReload={this.pageReload}
           toggleAnswers={this.handleClick}
@@ -77,3 +91,10 @@ export default class QuestionsContainer extends Component {
     );
   }
 }
+QuestionsContainer.defaultProps = {
+  sortBy: "date_posted"
+};
+
+QuestionsContainer.propTypes = {
+  sortBy: PropTypes.string
+};

@@ -20,7 +20,7 @@ function queryDb(query) {
 	return new Promise((resolve, error) => {
 		pool.query(query, function(err) {
 			if (err) {
-				console.log("error: ", err);
+				console.error("error: ", err);
 				error(err);
 				process.exit(1);
 			}

@@ -56,20 +56,18 @@ router.post("/register", async (req, res, next) => {
 /**
  *  User Profile Password Update
  */
-router.put('/change-password',
-  authMiddleware,
-  async (req, res, next) => {
-    db.updatePassword(req.body)
-      .then(() => {
-        res.send({
-          success: true,
-          message: "Password changed"
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        next(err);
+router.put('/change-password', authMiddleware, async (req, res, next) => {
+  db.updatePassword(req.body)
+    .then(() => {
+      res.send({
+        success: true,
+        message: "Password changed"
       });
-  })
+    })
+    .catch(err => {
+      console.log(err);
+      next(err);
+    });
+})
 
 module.exports = router;

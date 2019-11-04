@@ -119,7 +119,6 @@ export default class UserRegistration extends Component {
           });
         })
         .catch(err => {
-          console.error(err);
           this.setState({ errorsLog: errorsLog.concat(err), isLoading: false });
         });
     }

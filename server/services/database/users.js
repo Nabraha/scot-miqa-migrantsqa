@@ -38,12 +38,16 @@ const createUser = ({ username, email, password }) => {
   return new Promise((resolve, reject) => {
     pool.query(
       "INSERT INTO users (username ,email, password, profile_pic) values ($1, $2, $3,$4)",
-      [username, email, password,'https://image.flaticon.com/icons/png/512/145/145987.png'],
+      [
+        username,
+        email,
+        password,
+        "https://image.flaticon.com/icons/png/512/145/145987.png"
+      ],
       (error, result) => {
         if (error) {
           return reject(error);
         }
-        console.log(result);
         resolve(result.rows);
       }
     );
@@ -61,17 +65,19 @@ const getUserById = id => {
   });
 };
 
-
 const updatePassword = ({ oldPassword, newPassword, email }) => {
   return new Promise((resolve, reject) => {
     pool.query(
-      "SELECT password FROM users WHERE email = $1", [email],
+      "SELECT password FROM users WHERE email = $1",
+      [email],
       (error, result) => {
         if (error) {
           return reject(error);
         }
         if (result.rowCount !== 1) {
-          return reject(`User email ${email} not found or in database multiple times`);
+          return reject(
+            `User email ${email} not found or in database multiple times`
+          );
         }
         if (oldPassword !== result.rows[0].password) {
           return reject(`Password for user ${email} is incorrect`);
@@ -84,13 +90,30 @@ const updatePassword = ({ oldPassword, newPassword, email }) => {
               console.error(error);
               return reject(error);
             }
-            console.log(result);
             resolve(result.rows);
           }
         );
       }
-    )
-
+    );
+  });
+};
+const changeProfilePic = (newPictureLink, userId) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      `UPDATE
+      users
+       SET 
+      profile_pic = $1
+      WHERE 
+      id =$2`,
+      [newPictureLink, userId],
+      (error, result) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(result.rows);
+      }
+    );
   });
 };
 
@@ -99,5 +122,6 @@ module.exports = {
   createUser,
   getUserById,
   getAllUsers,
-  updatePassword
+  updatePassword,
+  changeProfilePic
 };

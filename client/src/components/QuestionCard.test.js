@@ -79,6 +79,12 @@ it("should handle onChange question value ", () => {
       editContentQuestion="1"
       handleSaveClick={() => {}}
       onChange={onChange}
+      question={[
+        { content: "I have been served court papers in regards to parental" }
+      ]}
+      userId={1}
+      tags={["paper"]}
+      visibleAnswers={false}
     />
   );
 

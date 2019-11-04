@@ -10,5 +10,31 @@
 }
 
 body {
-    background-color: #fafafa;
+  background-color: #fafafa;
+}
+.pointer {
+  cursor: pointer;
+}
+
+@media (max-width:600px)  { 
+  .filter, .sort {
+    width: 100% !important;
+  }
+
+  .sort {
+    margin-top: 4% !important;
+  }
+
+  .filter-container {
+    width: 100% !important;
+    padding-top: 0 !important;
+  }
+
+  .add-question{
+    width: 100vw !important;
+  }
+
+  .add-question-btn{
+    width: 100% !important;
+  }
 }

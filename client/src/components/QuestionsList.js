@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import { Pagination, Grid, Container } from "semantic-ui-react";
 import { postAnswer, updateScore } from "../api/questions";
+import { acceptAnswers } from "../api/answers";
 import QuestionCard from "./QuestionCard";
+import MobileQuestionCard from "./MobileQuestionCard";
+import { sendNotificationEmail } from "../api/sendEmail";
+import { getUsersDataByUserId } from "../api/users";
+import { deleteAnswer } from "../api/answers";
 
 export default class QuestionsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isDesktop: false, 
       selectedCardId: null,
       editQuestion: null,
       editQuestionId: null,
@@ -19,7 +25,22 @@ export default class QuestionsList extends Component {
       currentPage: 1,
       questionsPerPage: 10
     };
+    this.updatePredicate = this.updatePredicate.bind(this);
   }
+
+  componentDidMount() {
+    this.updatePredicate();
+    window.addEventListener("resize", this.updatePredicate);
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updatePredicate);
+  }
+  
+  updatePredicate() {
+    this.setState({ isDesktop: window.innerWidth > 1450 });
+  }
+
   handleEditClick = (question, event) => {
     event.stopPropagation();
     this.setState({
@@ -62,15 +83,42 @@ export default class QuestionsList extends Component {
       })
       .catch(err => {});
   };
+  SendEmailWhenAnswerSubmitted = (questionId, questionOwnerId) => {
+    getUsersDataByUserId(questionOwnerId)
+      .then(data => data)
+      .then(details => {
+        const recipient = details.email;
+        const username = details.username;
+        const message = {
+          subject: `Your question has a new answer`,
+          text: `Your question has a new answer: https://miqa.herokuapp.com/question/${questionId} `,
+          html: `
+          <centered>
+          <h2>Hey ${username}</h2>
+          <h3>Your question has a new answer:</h3>
+          <h4><a href="https://miqa.herokuapp.com/question/${questionId}">
+          https://miqa.herokuapp.com/question/${questionId}</a></h4>
+          <br>
+          <p>All the best,</p>
+          <p>MiQA team</p>
+          </centered>"`
+        };
+        return sendNotificationEmail(recipient, message);
+      });
+  };
+
   handleOnSubmitAnswer = e => {
     e.preventDefault();
     const { content, tags } = this.state;
     const questionId = this.props.QuestionId;
-
+    const questionOwnerID = this.props.questions.find(
+      question => question.id === questionId
+    ).user_id;
     postAnswer(content, tags, questionId)
       .then(result => {
         if (result.status === 200) {
           this.props.pageReload();
+          this.SendEmailWhenAnswerSubmitted(questionId, questionOwnerID);
           this.setState({
             content: ""
           });
@@ -136,9 +184,32 @@ export default class QuestionsList extends Component {
     this.setState({ pageNumber: e.target.value });
   };
 
+  handleAcceptAnswerOnClick = (e, answer) => {
+    e.preventDefault();
+    acceptAnswers(answer.question_id, !answer.is_accepted, answer.id)
+      .then(result => {
+        this.props.pageReload();
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   handlePaginationChange = (e, { activePage }) =>
     this.setState({ currentPage: activePage });
+
+  clickToDeleteAnswer = (e, answerId) => {
+    deleteAnswer(answerId)
+      .then(result => {
+        if (result.success) {
+          this.props.pageReload();
+        }
+      })
+      .catch(err => {});
+  };
+
   render() {
+    const isDesktop = this.state.isDesktop;
     const { currentPage, questionsPerPage } = this.state;
 
     //splitting array into small array
@@ -148,32 +219,61 @@ export default class QuestionsList extends Component {
       indexOfFirstQuestion,
       indexOfLastQuestion
     );
-    console.log("=====>>>", currentQuestions);
 
     return (
       <Container>
         {currentQuestions.map((question, index) => {
           return (
-            <QuestionCard
-              key={question.id}
-              index={index}
-              activeIndex={this.props.activeIndex}
-              question={question}
-              userId={this.props.userId}
-              toggleAnswers={this.props.toggleAnswers}
-              editQuestion={this.state.editQuestion}
-              editContentQuestion={this.state.editContentQuestion}
-              handleSaveClick={this.handleSaveClick}
-              onChange={this.handleEditChange}
-              handleCancelClick={this.handleCancelClick}
-              handleEditClick={this.handleEditClick}
-              answers={this.props.answers}
-              handleDeleteClick={this.handleDeleteClick}
-              handleChange={this.handleChange}
-              content={this.state.content}
-              handleOnSubmitAnswer={this.handleOnSubmitAnswer}
-              handleOnClickUpvoteBtn={this.handleOnClickUpvoteBtn}
-            />
+            <>
+              { isDesktop ?
+                <QuestionCard
+                  key={question.id}
+                  index={index}
+                  activeIndex={this.props.activeIndex}
+                  question={question}
+                  userId={this.props.userId}
+                  toggleAnswers={this.props.toggleAnswers}
+                  editQuestion={this.state.editQuestion}
+                  editContentQuestion={this.state.editContentQuestion}
+                  handleSaveClick={this.handleSaveClick}
+                  onChange={this.handleEditChange}
+                  handleCancelClick={this.handleCancelClick}
+                  handleEditClick={this.handleEditClick}
+                  answers={this.props.answers}
+                  handleDeleteClick={this.handleDeleteClick}
+                  handleChange={this.handleChange}
+                  content={this.state.content}
+                  handleOnSubmitAnswer={this.handleOnSubmitAnswer}
+                  handleOnClickUpvoteBtn={this.handleOnClickUpvoteBtn}
+                  handleAcceptAnswerOnClick={this.handleAcceptAnswerOnClick}
+                  visibleAnswers={false}
+                  clickToDeleteAnswer={this.clickToDeleteAnswer}
+                /> : 
+                <MobileQuestionCard
+                key={question.id}
+                index={index}
+                activeIndex={this.props.activeIndex}
+                question={question}
+                userId={this.props.userId}
+                toggleAnswers={this.props.toggleAnswers}
+                editQuestion={this.state.editQuestion}
+                editContentQuestion={this.state.editContentQuestion}
+                handleSaveClick={this.handleSaveClick}
+                onChange={this.handleEditChange}
+                handleCancelClick={this.handleCancelClick}
+                handleEditClick={this.handleEditClick}
+                answers={this.props.answers}
+                handleDeleteClick={this.handleDeleteClick}
+                handleChange={this.handleChange}
+                content={this.state.content}
+                handleOnSubmitAnswer={this.handleOnSubmitAnswer}
+                handleOnClickUpvoteBtn={this.handleOnClickUpvoteBtn}
+                handleAcceptAnswerOnClick={this.handleAcceptAnswerOnClick}
+                visibleAnswers={false}
+                clickToDeleteAnswer={this.clickToDeleteAnswer}
+              />
+              }
+          </>
           );
         })}
         <Grid>

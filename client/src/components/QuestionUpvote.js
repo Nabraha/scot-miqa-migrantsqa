@@ -24,7 +24,6 @@ const QuestionUpvote = props => {
                   size="big"
                 />
               )}
-              {questionScore} Likes
             </Feed.Like>
           </Feed.Meta>
         </Feed.Content>

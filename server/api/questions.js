@@ -7,6 +7,17 @@ const { authMiddleware } = require("../auth/passport");
 /**
  * Get Questions
  */
+
+router.get("/questionTags", (req, res) => {
+  questionDb
+    .getQuestionsTags()
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.sendStatus(500);
+    });
+});
 // get questions for profile
 router.get("/:id/Profile", (req, res) => {
   const { id } = req.params;
@@ -22,7 +33,7 @@ router.get("/:id/Profile", (req, res) => {
 });
 
 //to get the question by question id
-router.get("/:id", (req, res) => {
+router.get("/:id([0-9]+)", (req, res) => {
   const { id } = req.params;
   questionDb
     .getQuestionByQuestionId(id)
@@ -36,8 +47,9 @@ router.get("/:id", (req, res) => {
 });
 
 router.get("/", (req, res) => {
+  const sortBy = req.query.KeyWord;
   questionDb
-    .getAllQuestions()
+    .getAllQuestions(sortBy)
     .then(data => {
       res.send(data);
     })
@@ -47,17 +59,6 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/questionTags", (req, res) => {
-  questionDb
-    .getQuestionsTags()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-});
 /**
  * Post Questions
  */
@@ -75,7 +76,7 @@ router.post("/", authMiddleware, async (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       next(err);
     });
 });
@@ -92,7 +93,7 @@ router.post("/update-question", async (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       next(err);
     });
 });
@@ -109,7 +110,7 @@ router.put("/update-question-score", async (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       next(err);
     });
 });
@@ -125,7 +126,7 @@ router.delete("/delete-question", async (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       next(err);
     });
 });
@@ -138,7 +139,7 @@ router.post("/:questionId/answers", authMiddleware, async (req, res, next) => {
   const { content, tags } = req.body;
   const userId = req.user.id;
   const dateAnswered = moment().format();
-  const isAccepted = true;
+  const isAccepted = false;
   const questionId = parseInt(req.params.questionId);
   //TODO score here must be changed
   const score = 4;
@@ -159,8 +160,22 @@ router.post("/:questionId/answers", authMiddleware, async (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       next(err);
+    });
+});
+
+// get questions for profile
+router.get("/:id/Profile", (req, res) => {
+  const { id } = req.params;
+  questionDb
+    .getQuestionsByUserId(id)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
     });
 });
 

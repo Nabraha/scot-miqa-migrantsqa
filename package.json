@@ -16,7 +16,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "nodemailer": "^6.3.0",
     "react-alert": "^5.5.0",
     "react-alert-template-basic": "^1.0.0"
+  },
+  "engines": {
+    "node": "10.3.0"
   }
 }

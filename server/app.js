@@ -8,8 +8,9 @@ const app = express();
 const api = require("./api");
 const auth = require("./auth/routes");
 
+require("dotenv").config();
 require("./auth/passport");
-
+console.log(require("dotenv").config({ path: __dirname + "/../.env" }));
 /**
  * register middleware
  */
@@ -28,10 +29,10 @@ app.use("/api", api);
  */
 //
 if (process.env.NODE_ENV !== "development") {
-	app.use("/", express.static(path.resolve(__dirname, "../client/build")));
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-	});
+  app.use("/", express.static(path.resolve(__dirname, "../client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+  });
 }
 
 app.listen(SERVER_PORT, () => console.log(`Server running on ${SERVER_PORT}`));

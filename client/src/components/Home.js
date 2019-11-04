@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import "../styles/Home.css";
-import HomePageSearch from "./HomePageSearch";
-import { Container, Divider } from "semantic-ui-react";
+import { Container } from "semantic-ui-react";
 import QuestionsContainer from "./QuestionsContainer";
 
 export default class Home extends Component {
   state = {
-    tags: []
+    tags: [],
+    sortBy: "date_posted"
   };
 
   getFilteredTags = tags => {
@@ -14,14 +14,20 @@ export default class Home extends Component {
       tags
     });
   };
+  sortType = (e, type) => {
+    this.setState({ sortBy: type });
+  };
 
   render() {
     return (
       <Container>
-        <Divider horizontal />
-        <HomePageSearch getFilteredTags={this.getFilteredTags} />
-        <Divider horizontal />
-        <QuestionsContainer tags={this.state.tags} userId={this.props.userId} />
+        <QuestionsContainer
+          tags={this.state.tags}
+          getFilteredTags={this.getFilteredTags}
+          sortType={this.sortType}
+          userId={this.props.userId}
+          sortBy={this.state.sortBy}
+        />
       </Container>
     );
   }

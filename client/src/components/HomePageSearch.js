@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Dropdown, Container } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 import { getQuestions, getQuestionsTags } from "../api/questions";
+import { SortTypeMenu } from "./SortTypeMenu";
 
 export default class HomePageSearch extends Component {
   constructor(props) {
@@ -25,38 +26,34 @@ export default class HomePageSearch extends Component {
     });
   }
 
-  updatedTagOptions = () => {
-    const newFilteredTag = [];
-    this.state.filterTags.forEach(tags => {
-      return !newFilteredTag.includes(tags) && newFilteredTag.push(tags);
-    });
-    return newFilteredTag;
-  };
-
   handleSelectedTags = (e, data) => {
     const selectedOptionTags = data.value;
     this.props.getFilteredTags(selectedOptionTags);
   };
 
   render() {
-    const options = this.updatedTagOptions().map((tag, index) => ({
+    const { filterTags } = this.state;
+    const options = filterTags.map((tag, index) => ({
       key: index,
       text: tag,
       value: tag
     }));
 
     return (
-      <Container>
+      <React.Fragment>
         <Dropdown
-          placeholder="Filter by tags"
-          fluid
+          style={{ backgroundColor: "lightGrey" }}
+          text="Filter tags"
           multiple
+          clearable
           search
           selection
-          options={options}
           onChange={this.handleSelectedTags}
-        />
-      </Container>
+          options={options}
+          className="filter"
+        />{" "}
+        <SortTypeMenu sortType={this.props.sortType}></SortTypeMenu>
+      </React.Fragment>
     );
   }
 }

@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Segment, Header, Button, TextArea, Card } from "semantic-ui-react";
+import { Container } from "semantic-ui-react";
 import { postAnswer, updateScore } from "../api/questions";
 import { getAnswersByQuestionId } from "../api/answers";
 import { getQuestionByQuestionId } from "../api/questions";
 import { formatingDate } from "../util/formatingDate";
 import AnswerCard from "./AnswersCard";
 import QuestionUpvote from "./QuestionUpvote";
+import QuestionCard from "./QuestionCard";
 
 export default class ViewOneQuestion extends Component {
   constructor(props) {
@@ -25,7 +26,10 @@ export default class ViewOneQuestion extends Component {
   getAnswers = () => {
     getAnswersByQuestionId(this.state.questionId).then(answers =>
       this.setState({ answers: answers })
-    );
+    )
+    .catch(err => {
+      console.error(err);
+    });
   };
   handleOnClickUpvoteBtn = (question, userId) => {
     if (!userId || userId === question.user_id) return;
@@ -33,7 +37,7 @@ export default class ViewOneQuestion extends Component {
     updateScore(score, question.id)
       .then(result => {
         if (result.status === 200) {
-          window.location.reload();
+          this.getQuestion();
         }
       })
       .catch(err => {
@@ -57,10 +61,10 @@ export default class ViewOneQuestion extends Component {
     postAnswer(content, tags, questionId)
       .then(result => {
         if (result.status === 200) {
-          window.location.reload();
           this.setState({
             content: ""
           });
+          this.getAnswers();
         }
       })
       .catch(err => {
@@ -68,51 +72,32 @@ export default class ViewOneQuestion extends Component {
       });
   };
   render() {
-    const { question, answers } = this.state;
-    const {
-      props,
-      handleOnClickUpvoteBtn,
-      handleOnSubmitAnswer,
-      handleChange
-    } = this;
+    const { question, answers, content } = this.state;
     return (
-      <React.Fragment>
-        <Segment>
-          <Header>{question.content}</Header>
-          <QuestionUpvote
-            userId={this.props.userId}
-            questionUserId={question.user_id}
-            questionScore={question.score}
-            questionId={question.id}
-            handleOnClickUpvoteBtn={() =>
-              handleOnClickUpvoteBtn(question, props.userId)
-            }
-          />
-          <p style={{ textAlign: "right", color: "grey" }}>
-            {question.tags &&
-              question.tags.map(
-                (tag, index) =>
-                  //This line will add a #followed by the tag and
-                  //keep adding spaces till we reach the end of the array.
-
-                  `#${tag}${index === question.tags.length - 1 ? "" : ` `}`
-              )}
-            <br></br>
-            {formatingDate(question.date_posted)}
-            <br></br>
-            by {question.username}
-          </p>
-          {answers.map(answer => {
-            return <AnswerCard question={question} answer={answer} />;
-          })}
-
-          <TextArea
-            style={{ minHeight: 100, width: "95%" }}
-            onChange={handleChange}
-          />
-          <Button onClick={handleOnSubmitAnswer}>Submit</Button>
-        </Segment>
-      </React.Fragment>
+      <Container>
+            <QuestionCard
+              key={question.id}
+              index={question.id}
+              activeIndex={this.props.activeIndex}
+              question={question}
+              userId={this.props.userId}
+              toggleAnswers={this.props.toggleAnswers}
+              editQuestion={this.state.editQuestion}
+              editContentQuestion={this.state.editContentQuestion}
+              handleSaveClick={this.handleSaveClick}
+              onChange={this.handleEditChange}
+              handleCancelClick={this.handleCancelClick}
+              handleEditClick={this.handleEditClick}
+              answers={answers}
+              handleDeleteClick={this.handleDeleteClick}
+              handleChange={this.handleChange}
+              content={this.state.content}
+              handleOnSubmitAnswer={this.handleOnSubmitAnswer}
+              handleOnClickUpvoteBtn={this.handleOnClickUpvoteBtn}
+              handleAcceptAnswerOnClick={this.handleAcceptAnswerOnClick}
+              visibleAnswers={true}
+            />
+      </Container>
     );
   }
 }
