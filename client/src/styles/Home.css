@@ -16,8 +16,9 @@ body {
   cursor: pointer;
 }
 
-@media (max-width:600px)  { 
-  .filter, .sort {
+@media (max-width: 600px) {
+  .filter,
+  .sort {
     width: 100% !important;
   }
 
@@ -30,11 +31,11 @@ body {
     padding-top: 0 !important;
   }
 
-  .add-question{
+  .add-question {
     width: 100vw !important;
   }
 
-  .add-question-btn{
+  .add-question-btn {
     width: 100% !important;
   }
 }

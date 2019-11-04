@@ -18,7 +18,7 @@ export default class MenuBar extends Component {
           ? "home"
           : window.location.pathname.substr(1),
       profilePicUrl: null
-    }
+    };
     this.updatePredicate = this.updatePredicate.bind(this);
   }
 
@@ -71,11 +71,22 @@ export default class MenuBar extends Component {
   };
 
   render() {
-    const { activeItem, visible, profilePicUrl, isDesktop, handleItemClick } = this.state;
+    const {
+      activeItem,
+      visible,
+      profilePicUrl,
+      isDesktop,
+      handleItemClick
+    } = this.state;
     return (
       <>
-        {isDesktop ?
-          <Menu inverted size="huge" className="menu" style={{ height: "60px" }}>
+        {isDesktop ? (
+          <Menu
+            inverted
+            size="huge"
+            className="menu"
+            style={{ height: "60px" }}
+          >
             <Container>
               <Image
                 src={logo}
@@ -125,33 +136,33 @@ export default class MenuBar extends Component {
                         style={{ maxWidth: "60px", width: "100%" }}
                       />
                     ) : (
-                        ""
-                      )}
+                      ""
+                    )}
                   </Menu.Item>
                 </Menu.Menu>
               ) : (
-                  <Menu.Menu position="right">
-                    <Menu.Item
-                      name="login"
-                      active={activeItem === "login"}
-                      position="right"
-                      onClick={this.handleItemClick}
-                      as={Link}
-                      to="/login"
-                    />
-                    <Menu.Item
-                      name="register"
-                      position="right"
-                      active={activeItem === "register"}
-                      onClick={this.handleItemClick}
-                      as={Link}
-                      to="/register"
-                    />
-                  </Menu.Menu>
-                )}
+                <Menu.Menu position="right">
+                  <Menu.Item
+                    name="login"
+                    active={activeItem === "login"}
+                    position="right"
+                    onClick={this.handleItemClick}
+                    as={Link}
+                    to="/login"
+                  />
+                  <Menu.Item
+                    name="register"
+                    position="right"
+                    active={activeItem === "register"}
+                    onClick={this.handleItemClick}
+                    as={Link}
+                    to="/register"
+                  />
+                </Menu.Menu>
+              )}
             </Container>
           </Menu>
-          :
+        ) : (
           <Menu
             inverted
             size="huge"
@@ -190,7 +201,6 @@ export default class MenuBar extends Component {
                   </Responsive>
                 </Menu.Item>
               </Menu.Menu>
-
               <Responsive as={Menu} inverted minWidth={1000}>
                 <MenuItems
                   activeItem={activeItem}
@@ -200,7 +210,6 @@ export default class MenuBar extends Component {
                   profilePicUrl={profilePicUrl}
                 />
               </Responsive>
-
               <SideBar
                 userId={this.props.userId}
                 visible={visible}
@@ -208,10 +217,10 @@ export default class MenuBar extends Component {
                 activeItem={activeItem}
                 handleItemClick={this.handleItemClick}
                 handleLogout={this.handleLogout}
-              />      </Container>
-
+              />{" "}
+            </Container>
           </Menu>
-        }
+        )}
       </>
     );
   }

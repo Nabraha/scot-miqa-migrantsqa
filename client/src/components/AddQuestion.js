@@ -68,7 +68,8 @@ export default class AddQuestion extends Component {
         <Form onSubmit={this.handleOnSubmit}>
           <Grid columns={2}>
             <Grid.Column floated="left" className="add-question">
-              <Button className="add-question-btn"
+              <Button
+                className="add-question-btn"
                 onClick={
                   this.props.userId ? this.ShowQuestion : this.handleOpen
                 }
@@ -76,7 +77,11 @@ export default class AddQuestion extends Component {
                 Add a question
               </Button>
             </Grid.Column>
-            <Grid.Column floated="right" textAlign="right" className="filter-container">
+            <Grid.Column
+              floated="right"
+              textAlign="right"
+              className="filter-container"
+            >
               <HomePageSearch
                 getFilteredTags={this.props.getFilteredTags}
                 sortType={this.props.sortType}

@@ -12,7 +12,7 @@ export default class QuestionsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDesktop: false, 
+      isDesktop: false,
       selectedCardId: null,
       editQuestion: null,
       editQuestionId: null,
@@ -32,11 +32,11 @@ export default class QuestionsList extends Component {
     this.updatePredicate();
     window.addEventListener("resize", this.updatePredicate);
   }
-  
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updatePredicate);
   }
-  
+
   updatePredicate() {
     this.setState({ isDesktop: window.innerWidth > 1450 });
   }
@@ -225,7 +225,7 @@ export default class QuestionsList extends Component {
         {currentQuestions.map((question, index) => {
           return (
             <>
-              { isDesktop ?
+              {isDesktop ? (
                 <QuestionCard
                   key={question.id}
                   index={index}
@@ -248,32 +248,33 @@ export default class QuestionsList extends Component {
                   handleAcceptAnswerOnClick={this.handleAcceptAnswerOnClick}
                   visibleAnswers={false}
                   clickToDeleteAnswer={this.clickToDeleteAnswer}
-                /> : 
+                />
+              ) : (
                 <MobileQuestionCard
-                key={question.id}
-                index={index}
-                activeIndex={this.props.activeIndex}
-                question={question}
-                userId={this.props.userId}
-                toggleAnswers={this.props.toggleAnswers}
-                editQuestion={this.state.editQuestion}
-                editContentQuestion={this.state.editContentQuestion}
-                handleSaveClick={this.handleSaveClick}
-                onChange={this.handleEditChange}
-                handleCancelClick={this.handleCancelClick}
-                handleEditClick={this.handleEditClick}
-                answers={this.props.answers}
-                handleDeleteClick={this.handleDeleteClick}
-                handleChange={this.handleChange}
-                content={this.state.content}
-                handleOnSubmitAnswer={this.handleOnSubmitAnswer}
-                handleOnClickUpvoteBtn={this.handleOnClickUpvoteBtn}
-                handleAcceptAnswerOnClick={this.handleAcceptAnswerOnClick}
-                visibleAnswers={false}
-                clickToDeleteAnswer={this.clickToDeleteAnswer}
-              />
-              }
-          </>
+                  key={question.id}
+                  index={index}
+                  activeIndex={this.props.activeIndex}
+                  question={question}
+                  userId={this.props.userId}
+                  toggleAnswers={this.props.toggleAnswers}
+                  editQuestion={this.state.editQuestion}
+                  editContentQuestion={this.state.editContentQuestion}
+                  handleSaveClick={this.handleSaveClick}
+                  onChange={this.handleEditChange}
+                  handleCancelClick={this.handleCancelClick}
+                  handleEditClick={this.handleEditClick}
+                  answers={this.props.answers}
+                  handleDeleteClick={this.handleDeleteClick}
+                  handleChange={this.handleChange}
+                  content={this.state.content}
+                  handleOnSubmitAnswer={this.handleOnSubmitAnswer}
+                  handleOnClickUpvoteBtn={this.handleOnClickUpvoteBtn}
+                  handleAcceptAnswerOnClick={this.handleAcceptAnswerOnClick}
+                  visibleAnswers={false}
+                  clickToDeleteAnswer={this.clickToDeleteAnswer}
+                />
+              )}
+            </>
           );
         })}
         <Grid>

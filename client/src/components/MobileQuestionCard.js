@@ -50,11 +50,11 @@ const MobileQuestionCard = props => {
                         answer => answer.question_id === question.id
                       ).length
                     }{" "}
-                    {
-                      props.answers.filter(
-                        answer => answer.question_id === question.id
-                      ).length == 1 ? "answer" : "answers"
-                    }
+                    {props.answers.filter(
+                      answer => answer.question_id === question.id
+                    ).length == 1
+                      ? "answer"
+                      : "answers"}
                   </Card.Meta>
                 </Grid.Column>
                 <Grid.Column textAlign="left" width={11}>
@@ -129,34 +129,34 @@ const MobileQuestionCard = props => {
                       )}
                   </Card.Meta>
                 </Grid.Column>
-                </Grid>
-                <Grid columns={2}>
-                  <Grid.Column textAlign="left" width={8}>
-                    <OptionButtonAtQuestionCard
-                      link={`/question/${question.id}`}
-                    />
-                  </Grid.Column>
-                  <Grid.Column textAlign="right" width={8}>
-                    <Card.Meta textAlign="right">
-                      <Label
-                        as="a"
-                        image
-                        style={{
-                          paddingRight: "0",
-                          minWidth: "90px",
-                          textAlign: "left",
-                          fontSize: "0.8em"
-                        }}
-                      >
-                        {question.username}{" "}
-                        <img
-                          src={question.profile_pic}
-                          style={{ float: "right" }}
-                        />
-                      </Label>
-                    </Card.Meta>
-                  </Grid.Column>
-                </Grid>
+              </Grid>
+              <Grid columns={2}>
+                <Grid.Column textAlign="left" width={8}>
+                  <OptionButtonAtQuestionCard
+                    link={`/question/${question.id}`}
+                  />
+                </Grid.Column>
+                <Grid.Column textAlign="right" width={8}>
+                  <Card.Meta textAlign="right">
+                    <Label
+                      as="a"
+                      image
+                      style={{
+                        paddingRight: "0",
+                        minWidth: "90px",
+                        textAlign: "left",
+                        fontSize: "0.8em"
+                      }}
+                    >
+                      {question.username}{" "}
+                      <img
+                        src={question.profile_pic}
+                        style={{ float: "right" }}
+                      />
+                    </Label>
+                  </Card.Meta>
+                </Grid.Column>
+              </Grid>
             </Accordion.Title>
             {visibleAnswers ? (
               <Accordion.Content active={true}>
