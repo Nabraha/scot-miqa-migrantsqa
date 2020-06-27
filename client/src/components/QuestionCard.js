@@ -6,13 +6,13 @@ import {
   TextArea,
   Accordion,
   Grid,
-  Label
+  Label,
 } from "semantic-ui-react";
 import AnswersList from "./AnswersList";
 import QuestionUpvote from "./QuestionUpvote";
 import OptionButtonAtQuestionCard from "./OptionButtonAtQuestionCard";
 
-const QuestionCard = props => {
+const QuestionCard = (props) => {
   const { question, index, visibleAnswers } = props;
   return (
     <Card
@@ -36,7 +36,7 @@ const QuestionCard = props => {
                     data-testid="edit"
                     value={props.editContentQuestion}
                     style={{ minHeight: 100 }}
-                    onChange={e => props.onChange(e)}
+                    onChange={(e) => props.onChange(e)}
                   />
                   <div className="ui two buttons">
                     <Button
@@ -68,14 +68,16 @@ const QuestionCard = props => {
                     <Button
                       basic
                       color="green"
-                      onClick={event => props.handleEditClick(question, event)}
+                      onClick={(event) =>
+                        props.handleEditClick(question, event)
+                      }
                     >
                       Edit
                     </Button>
                     <Button
                       basic
                       color="red"
-                      onClick={event =>
+                      onClick={(event) =>
                         props.handleDeleteClick(question, event)
                       }
                     >
@@ -94,7 +96,7 @@ const QuestionCard = props => {
               handleChange={props.handleChange}
               content={props.content}
             />
-            =======
+
             <Grid columns={3}>
               <Grid.Column textAlign="left" width={2}>
                 <QuestionUpvote
@@ -112,11 +114,11 @@ const QuestionCard = props => {
                 <Card.Meta style={{ fontSize: "0.9em" }}>
                   {
                     props.answers.filter(
-                      answer => answer.question_id === question.id
+                      (answer) => answer.question_id === question.id
                     ).length
                   }{" "}
                   {props.answers.filter(
-                    answer => answer.question_id === question.id
+                    (answer) => answer.question_id === question.id
                   ).length == 1
                     ? "answer"
                     : "answers"}
@@ -128,7 +130,7 @@ const QuestionCard = props => {
                     <TextArea
                       value={props.editContentQuestion}
                       style={{ minHeight: 100 }}
-                      onChange={e => props.onChange(e)}
+                      onChange={(e) => props.onChange(e)}
                     />
                     <div className="ui two buttons" style={{ width: "40%" }}>
                       <Button
@@ -157,7 +159,7 @@ const QuestionCard = props => {
                       <Button
                         basic
                         color="black"
-                        onClick={event =>
+                        onClick={(event) =>
                           props.handleEditClick(question, event)
                         }
                       >
@@ -166,7 +168,7 @@ const QuestionCard = props => {
                       <Button
                         basic
                         color="black"
-                        onClick={event =>
+                        onClick={(event) =>
                           props.handleDeleteClick(question, event)
                         }
                       >
@@ -179,7 +181,7 @@ const QuestionCard = props => {
                   textAlign="left"
                   style={{
                     fontStyle: "italic",
-                    marginTop: "0.5em"
+                    marginTop: "0.5em",
                   }}
                 >
                   {question.tags &&
@@ -202,7 +204,7 @@ const QuestionCard = props => {
                       paddingRight: "0",
                       minWidth: "90px",
                       textAlign: "left",
-                      fontSize: "0.8em"
+                      fontSize: "0.8em",
                     }}
                   >
                     {question.username}{" "}
@@ -246,7 +248,6 @@ const QuestionCard = props => {
                 userId={props.userId}
               />
             )}
-            >>>>>>> 2b676173302b8c7773807430da38db3cb82b7e6c
           </Accordion>
         </Card.Header>
       </Card.Content>
